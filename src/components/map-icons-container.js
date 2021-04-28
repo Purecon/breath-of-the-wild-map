@@ -52,10 +52,15 @@ class MapIconsContainer extends Component {
   render() {
     const { activeIconTypes, locations } = this.props;
     console.log("Tipe icon: ",activeIconTypes);
-    console.log("Lokasi: ",locations);
+    //semua lokasi
+    //console.log("Lokasi: ",locations);
+    let temp_arr = [];
     activeIconTypes.forEach(element => {
-      console.log("Lokasi berdasarkan icon: ",locations[element]);
+      //lokasi berdasarkan icon
+      //console.log("Lokasi berdasarkan icon: ",locations[element]);
+      temp_arr = temp_arr.concat(locations[element]);
     });
+    console.log(temp_arr);
     //console.log(activeIconTypes, locations);
     return (
       <div>

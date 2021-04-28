@@ -33,7 +33,7 @@ const DisplayIcons = ({ activeIconTypes, locations }) => {
           icon={icon.icon}
           title={location.name}
           key={location.name}
-          onClick={(event) => console.log("Berhasil diklik",[event.latlng.lat, event.latlng.lng])}
+          onClick={(event) => console.log("Berhasil diklik",location.name,[event.latlng.lat, event.latlng.lng])}
         >
           <Popup>
             <span>{popupText}</span>

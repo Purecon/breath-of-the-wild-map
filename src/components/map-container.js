@@ -26,7 +26,8 @@ export default class MapContainer extends Component {
         maxBounds={maxBounds}
         zoom={4}
         //onClick={(event) => console.log(event.latlng)}
-        onClick={(event) => console.log([event.latlng.lat, event.latlng.lng])}
+        //Log saat peta diklik di mana pun
+        onClick={(event) => console.log("Klik di peta: ",[event.latlng.lat, event.latlng.lng])}
        >
         <TileLayer
           minZoom={3}

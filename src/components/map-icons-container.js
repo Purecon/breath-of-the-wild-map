@@ -51,7 +51,12 @@ const DisplayIcons = ({ activeIconTypes, locations }) => {
 class MapIconsContainer extends Component {
   render() {
     const { activeIconTypes, locations } = this.props;
-    console.log(activeIconTypes, locations);
+    console.log("Tipe icon: ",activeIconTypes);
+    console.log("Lokasi: ",locations);
+    activeIconTypes.forEach(element => {
+      console.log("Lokasi berdasarkan icon: ",locations[element]);
+    });
+    //console.log(activeIconTypes, locations);
     return (
       <div>
         {activeIconTypes && locations &&

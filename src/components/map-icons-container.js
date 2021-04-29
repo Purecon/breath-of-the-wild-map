@@ -10,6 +10,7 @@ import icons from '../data/icons';
 
 import './map-icons-container.css';
 import locations from '../data/locations';
+let first_click = true;
 
 const iconText = (location, iconType) => {
   const instructions = icons[iconType].instructions;
@@ -26,7 +27,6 @@ const DisplayIcons = ({ activeIconTypes, locations }) => {
     return locations[iconType].map((location) => {
       const icon = icons[iconType];
       const popupText = iconText(location, iconType);
-
       return (
         <Marker
           position={location.coordinates}
@@ -34,8 +34,9 @@ const DisplayIcons = ({ activeIconTypes, locations }) => {
           icon={icon.icon}
           title={location.name}
           key={location.name}
-          //onClick={(event) => console.log("Berhasil diklik",activeIconTypes,location.name,[event.latlng.lat, event.latlng.lng])}
-          onClick={(event) => console.log("Array of active locations: ",getActiveLoc(activeIconTypes))}
+          //On click event
+          onClick={(event) => handleClick(event,activeIconTypes,location)}
+          //onClick={(event) => console.log("Berhasil diklik",activeIconTypes,location.name,[event.latlng.lat, event.latlng.lng],"Array of active locations: ",getActiveLoc(activeIconTypes))}
         >
           <Popup>
             <span>{popupText}</span>
@@ -89,6 +90,17 @@ function getActiveLoc(activeIconTypes){
     temp_arr = temp_arr.concat(locations[element]);
   });
   return temp_arr;
+}
+
+function handleFirstClick(){
+  //swap first click
+  first_click = !first_click;
+  console.log("First click value",first_click);
+}
+
+function handleClick(event,activeIconTypes,location){
+  handleFirstClick();
+  console.log("Berhasil diklik",activeIconTypes,location.name,[event.latlng.lat, event.latlng.lng],"Array of active locations: ",getActiveLoc(activeIconTypes))
 }
 
 export default connect(mapStateToProps)(MapIconsContainer);

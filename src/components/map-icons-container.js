@@ -9,6 +9,7 @@ import {
 import icons from '../data/icons';
 
 import './map-icons-container.css';
+import locations from '../data/locations';
 
 const iconText = (location, iconType) => {
   const instructions = icons[iconType].instructions;
@@ -33,7 +34,8 @@ const DisplayIcons = ({ activeIconTypes, locations }) => {
           icon={icon.icon}
           title={location.name}
           key={location.name}
-          onClick={(event) => console.log("Berhasil diklik",location.name,[event.latlng.lat, event.latlng.lng])}
+          //onClick={(event) => console.log("Berhasil diklik",activeIconTypes,location.name,[event.latlng.lat, event.latlng.lng])}
+          onClick={(event) => console.log("Array of active locations: ",getActiveLoc(activeIconTypes))}
         >
           <Popup>
             <span>{popupText}</span>
@@ -80,5 +82,13 @@ const mapStateToProps = (state) => {
     locations: state.locations
   }
 };
+
+function getActiveLoc(activeIconTypes){
+  let temp_arr = [];
+  activeIconTypes.forEach(element => {
+    temp_arr = temp_arr.concat(locations[element]);
+  });
+  return temp_arr;
+}
 
 export default connect(mapStateToProps)(MapIconsContainer);

@@ -6,6 +6,7 @@ import {
 } from 'react-leaflet';
 
 import MapIconsContainer from './map-icons-container';
+import PathContainer from './path';
 
 import './map-container.css';
 
@@ -36,6 +37,7 @@ export default class MapContainer extends Component {
         />
 
         <MapIconsContainer />
+        <PathContainer />
       </Map>
     )
   }

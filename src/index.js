@@ -15,7 +15,8 @@ import locationData from './data/locations';
 
 const initialState = {
   activeIconTypes: [],
-  locations: locationData
+  locations: locationData,
+  targetLocations: []
 };
 
 let store = createStore(reducer, initialState);

@@ -25,6 +25,12 @@ export const reducer = (state, action) => {
       }
 
       return { ...state, activeIconTypes };
+    
+    case 'SET_NEW_TARGET_LOC':
+      const {targets} = action;
+      let targetLocations;
+      targetLocations = targets;
+      return { ...state, targetLocations};
     default:
       return state;
   }

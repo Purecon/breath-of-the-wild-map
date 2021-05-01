@@ -94,7 +94,7 @@ function getActiveLoc(activeIconTypes){
   return temp_arr;
 }
 
-// Actions
+// Actions untuk mengubah lokasi untuk path
 export const setTargetLoc = (newLatLngs) => {
   return {
       targets: newLatLngs,
@@ -115,6 +115,9 @@ function handleFirstClick(location,popupText,props){
     popupText = "Titik selesai: \n" + popupText;
     console.log(popupText);
     newLatLngs = newLatLngs.concat([location.coordinates]);
+    //debug newLatLngs
+    console.log("Koordinat mulai: ", newLatLngs[0]);
+    console.log("Koordinat selesai: ", newLatLngs[1]);
     props.dispatch(setTargetLoc(newLatLngs));
   }
   //swap first click
@@ -123,8 +126,10 @@ function handleFirstClick(location,popupText,props){
 }
 
 function handleClick(event,activeIconTypes,location,popupText,props){
+  //Log after clicked
+  console.log("Berhasil diklik",activeIconTypes,location.name,[event.latlng.lat, event.latlng.lng]);
   handleFirstClick(location,popupText,props);
-  console.log("Berhasil diklik",activeIconTypes,location.name,[event.latlng.lat, event.latlng.lng],"Array of active locations: ",getActiveLoc(activeIconTypes))
+  //console.log("Berhasil diklik",activeIconTypes,location.name,[event.latlng.lat, event.latlng.lng],"Array of active locations: ",getActiveLoc(activeIconTypes))
 }
 
 export default connect(mapStateToProps)(MapIconsContainer);

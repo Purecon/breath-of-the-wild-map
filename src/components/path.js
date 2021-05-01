@@ -6,10 +6,7 @@ import {Polyline} from 'react-leaflet';
 class PathContainer extends Component {
   render() {
     const {target} = this.props;
-    var latlngs = [];
     console.log("target",target);
-    latlngs = target;
-    console.log("latlngs",latlngs);
     return (
       <div>
         <Polyline positions={target} pathOptions={{color: '#4390ba'}}/>        

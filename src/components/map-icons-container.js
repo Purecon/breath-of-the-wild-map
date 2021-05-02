@@ -26,6 +26,7 @@ const DisplayIcons = ({ activeIconTypes, locations, props }) => {
     return locations[iconType].map((location) => {
       const icon = icons[iconType];
       let popupText = iconText(location, iconType);
+      let activeLocs = getActiveLoc(activeIconTypes);
       return (
         <Marker
           position={location.coordinates}
@@ -34,7 +35,7 @@ const DisplayIcons = ({ activeIconTypes, locations, props }) => {
           title={location.name}
           key={location.name}
           //On click event
-          onClick={(event) => handleClick(event,activeIconTypes,location,popupText,props)}
+          onClick={(event) => handleClick(event,activeIconTypes,location,popupText,props,activeLocs)}
           //onClick={(event) => console.log("Berhasil diklik",activeIconTypes,location.name,[event.latlng.lat, event.latlng.lng],"Array of active locations: ",getActiveLoc(activeIconTypes))}
         >
           <Popup>
@@ -105,19 +106,26 @@ export const setTargetLoc = (newLatLngs) => {
 //first_click button
 let first_click = true;
 let newLatLngs = [];
-function handleFirstClick(location,popupText,props){
+let start_loc, end_loc;
+function handleFirstClick(location,popupText,props,activeLocs){
   if(first_click){
     popupText = "Titik mulai: \n" + popupText;
     console.log(popupText);
     newLatLngs = [location.coordinates];
+    start_loc = location;
   }
   else{
     popupText = "Titik selesai: \n" + popupText;
     console.log(popupText);
     newLatLngs = newLatLngs.concat([location.coordinates]);
+    end_loc = location;
     //debug newLatLngs
-    console.log("Koordinat mulai: ", newLatLngs[0]);
-    console.log("Koordinat selesai: ", newLatLngs[1]);
+    //console.log("Koordinat mulai: ", newLatLngs[0]);
+    //console.log("Koordinat selesai: ", newLatLngs[1]);
+    console.log("Lokasi aktif: ",activeLocs);
+    console.log("Lokasi mulai: ",start_loc);
+    console.log("Lokasi selesai", end_loc);
+    //update state targetLoc
     props.dispatch(setTargetLoc(newLatLngs));
   }
   //swap first click
@@ -125,10 +133,11 @@ function handleFirstClick(location,popupText,props){
   //console.log("First click value",first_click);
 }
 
-function handleClick(event,activeIconTypes,location,popupText,props){
+
+function handleClick(event,activeIconTypes,location,popupText,props,activeLocs){
   //Log after clicked
   console.log("Berhasil diklik",activeIconTypes,location.name,[event.latlng.lat, event.latlng.lng]);
-  handleFirstClick(location,popupText,props);
+  handleFirstClick(location,popupText,props,activeLocs);
   //console.log("Berhasil diklik",activeIconTypes,location.name,[event.latlng.lat, event.latlng.lng],"Array of active locations: ",getActiveLoc(activeIconTypes))
 }
 

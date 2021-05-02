@@ -103,10 +103,23 @@ export const setTargetLoc = (newLatLngs) => {
   }
 };
 
+//Kelas simpul
+class Simpul {
+  constructor(name, location) {
+    this.nama = name;
+    this.lokasi = location;
+    this.tetangga = undefined;
+  }
+  setTetangga(neighbour){
+    this.tetangga = neighbour;
+  }
+}
+
 //first_click button
 let first_click = true;
 let newLatLngs = [];
 let start_loc, end_loc;
+let arr_simpul = [];
 function handleFirstClick(location,popupText,props,activeLocs){
   if(first_click){
     popupText = "Titik mulai: \n" + popupText;
@@ -119,15 +132,23 @@ function handleFirstClick(location,popupText,props,activeLocs){
     console.log(popupText);
     newLatLngs = newLatLngs.concat([location.coordinates]);
     end_loc = location;
-    //debug newLatLngs
-    //console.log("Koordinat mulai: ", newLatLngs[0]);
-    //console.log("Koordinat selesai: ", newLatLngs[1]);
+    
     console.log("Lokasi aktif: ",activeLocs);
     console.log("Lokasi mulai: ",start_loc);
     console.log("Lokasi selesai", end_loc);
+
+    //test simpul
+    // let simpul_test = new Simpul(location.name,location.coordinates);
+    // arr_simpul = arr_simpul.concat(simpul_test);
+    // simpul_test.setTetangga(start_loc);
+
+    console.log(arr_simpul);
     //update state targetLoc
+
+    //newLatLngs for line in map
     props.dispatch(setTargetLoc(newLatLngs));
   }
+  
   //swap first click
   first_click = !first_click;
   //console.log("First click value",first_click);

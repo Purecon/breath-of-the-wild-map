@@ -21,12 +21,11 @@ const iconText = (location, iconType) => {
   }
 }
 
-const DisplayIcons = ({ activeIconTypes, locations, props }) => {
+const DisplayIcons = ({ activeIconTypes, locations, props, activeLocs}) => {
   const displayIcons = activeIconTypes.map((iconType) => {
     return locations[iconType].map((location) => {
       const icon = icons[iconType];
       let popupText = iconText(location, iconType);
-      let activeLocs = getActiveLoc(activeIconTypes);
       return (
         <Marker
           position={location.coordinates}
@@ -51,27 +50,38 @@ const DisplayIcons = ({ activeIconTypes, locations, props }) => {
   )
 };
 
+
+//Kelas simpul
+class Simpul {
+  constructor(name, location) {
+    this.nama = name;
+    this.lokasi = location;
+    this.tetangga = undefined;
+  }
+  setTetangga(neighbour){
+    this.tetangga = neighbour;
+  }
+}
+let arr_simpul = [];
+
+//MapIconsContainer
 class MapIconsContainer extends Component {
   render() {
     const { activeIconTypes, locations } = this.props;
     var props = this.props;
     console.log("Tipe icon: ",activeIconTypes);
-    //semua lokasi
-    //console.log("Lokasi: ",locations);
-
     //lokasi active icons
-    // let temp_arr = [];
-    // activeIconTypes.forEach(element => {
-    //   //lokasi berdasarkan icon
-    //   //console.log("Lokasi berdasarkan icon: ",locations[element]);
-    //   temp_arr = temp_arr.concat(locations[element]);
-    // });
-    // console.log(temp_arr);
-    //console.log(activeIconTypes, locations);
+    let activeLocs = getActiveLoc(activeIconTypes);
+    //Bangun graf
+    activeLocs.forEach(element => {
+      let simpul = new Simpul(element.name,element.coordinates);
+      arr_simpul = arr_simpul.concat(simpul);
+    });
+
     return (
       <div>
         {activeIconTypes && locations &&
-          <DisplayIcons { ...{ activeIconTypes, locations, props} } />
+          <DisplayIcons { ...{ activeIconTypes, locations, props, activeLocs} } />
         }
       </div>
     )
@@ -103,52 +113,40 @@ export const setTargetLoc = (newLatLngs) => {
   }
 };
 
-//Kelas simpul
-class Simpul {
-  constructor(name, location) {
-    this.nama = name;
-    this.lokasi = location;
-    this.tetangga = undefined;
-  }
-  setTetangga(neighbour){
-    this.tetangga = neighbour;
-  }
-}
-
 //first_click button
 let first_click = true;
 let newLatLngs = [];
 let start_loc, end_loc;
-let arr_simpul = [];
 function handleFirstClick(location,popupText,props,activeLocs){
   if(first_click){
     popupText = "Titik mulai: \n" + popupText;
     console.log(popupText);
+    //test newLatLngs
     newLatLngs = [location.coordinates];
     start_loc = location;
   }
   else{
     popupText = "Titik selesai: \n" + popupText;
     console.log(popupText);
+    //test newLatLngs
     newLatLngs = newLatLngs.concat([location.coordinates]);
     end_loc = location;
     
     console.log("Lokasi aktif: ",activeLocs);
     console.log("Lokasi mulai: ",start_loc);
     console.log("Lokasi selesai", end_loc);
+    console.log(arr_simpul);
 
     //test simpul
     // let simpul_test = new Simpul(location.name,location.coordinates);
     // arr_simpul = arr_simpul.concat(simpul_test);
     // simpul_test.setTetangga(start_loc);
 
-    console.log(arr_simpul);
     //update state targetLoc
-
     //newLatLngs for line in map
     props.dispatch(setTargetLoc(newLatLngs));
   }
-  
+
   //swap first click
   first_click = !first_click;
   //console.log("First click value",first_click);

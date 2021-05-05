@@ -64,14 +64,14 @@ class Simpul {
     this.nama = name;
     this.lokasi = location;
     //array
-    this.tetangga = undefined;
+    this.tetangga = [];
   }
   setTetangga(neighbour){
     this.tetangga = neighbour;
   }
 }
-let arr_simpul = [];
 
+let arr_simpul = [];
 //MapIconsContainer
 class MapIconsContainer extends Component {
   render() {
@@ -81,6 +81,7 @@ class MapIconsContainer extends Component {
     //lokasi active icons
     let activeLocs = getActiveLoc(activeIconTypes);
     //Bangun graf
+    arr_simpul = [];
     activeLocs.forEach(element => {
       let simpul = new Simpul(element.name,element.coordinates);
       arr_simpul = arr_simpul.concat(simpul);
@@ -99,23 +100,37 @@ class MapIconsContainer extends Component {
         }
       });
       let simpul_sorted = Object.keys(other_simpul).sort(function(a,b){return other_simpul[a]-other_simpul[b]})
-      //debug
-      //console.log("Simpul 1:",element.nama," Simpul lain:",simpul_sorted);
-      //console.log("Simpul 1:",element.nama," Simpul lain 1:",simpul_sorted[0]);
-      //console.log("Simpul 1:",element.nama," Simpul lain 2:",simpul_sorted[1]);
-      //console.log("Simpul 1:",element.nama," Simpul lain 3:",simpul_sorted[2]);
       let simpul_tetangga = [];
-      for(let i = 0; i<3; i++)
+      //Get tetangga 2 jarak terdekat
+      for(let i = 0; i<2; i++)
       {
-        simpul_tetangga = simpul_tetangga.concat(simpul_sorted[i]);
+        if (!element.tetangga.includes(simpul_sorted[i]))
+        {
+          simpul_tetangga = simpul_tetangga.concat(simpul_sorted[i]);
+        }
       }
       element.setTetangga(simpul_tetangga);
+    });
+
+    //Tambahkan tetangga jika belum dua arah
+    arr_simpul.forEach(element => {
+      element.tetangga.forEach(element2 => {
+        arr_simpul.forEach(element3 => {
+          if (element3.nama===element2)
+          {
+            if(!element3.tetangga.includes(element.nama))
+            {
+              element3.tetangga = element3.tetangga.concat(element.nama);
+            }
+          }
+        });
+      });
     });
 
     return (
       <div>
         {activeIconTypes && locations &&
-          <DisplayIcons { ...{ activeIconTypes, locations, props, activeLocs} } />
+          <DisplayIcons { ...{ activeIconTypes, locations, props, activeLocs, arr_simpul} } />
         }
       </div>
     )
@@ -168,15 +183,15 @@ function handleFirstClick(location,popupText,props,activeLocs){
     
     console.log("Lokasi aktif: ",activeLocs);
     console.log("Lokasi mulai: ",start_loc);
-    console.log("Lokasi selesai:", end_loc);
+    console.log("Lokasi selesai: ", end_loc);
     //testing euclidean
     //console.log("Euclidean dist:",euclideanDistance(start_loc.coordinates,end_loc.coordinates));
-    console.log(arr_simpul);
+    console.log("Array simpul: ",arr_simpul);
 
     //test simpul
-    // let simpul_test = new Simpul(location.name,location.coordinates);
-    // arr_simpul = arr_simpul.concat(simpul_test);
-    // simpul_test.setTetangga(start_loc);
+    arr_simpul.forEach(element => {
+      console.log("Tetangga simpul ",element.nama ," :",element.tetangga);
+    });
 
     //update state targetLoc
     //newLatLngs for line in map

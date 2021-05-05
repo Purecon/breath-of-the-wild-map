@@ -12,23 +12,22 @@ export const setActiveIconTypes = (iconType) => {
 };
 
 export const reducer = (state, action) => {
+  let targetLocations;
   switch(action.type) {
     case 'SET_ACTIVE_ICON_TYPES':
       const { iconType } = action;
       const isAlreadyActive = state.activeIconTypes.includes(iconType);
       let activeIconTypes;
-
       if (isAlreadyActive) {
         activeIconTypes = state.activeIconTypes.filter((icon) => icon !== iconType);
       } else {
         activeIconTypes = state.activeIconTypes.concat(iconType);
       }
 
-      return { ...state, activeIconTypes };
-    
+      targetLocations = [];
+      return { ...state, activeIconTypes, targetLocations};
     case 'SET_NEW_TARGET_LOC':
       const {targets} = action;
-      let targetLocations;
       targetLocations = targets;
       return { ...state, targetLocations};
     default:

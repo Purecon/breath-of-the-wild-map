@@ -14,10 +14,10 @@ import locations from '../data/locations';
 const iconText = (location, iconType) => {
   const instructions = icons[iconType].instructions;
 
-  if (location.name) {
+  if (location.name && !location.name.startsWith("Korok")){
     return location.name;
   } else if (instructions) {
-    return instructions[location.instructionType];
+    return location.name + "\n"+instructions[location.instructionType];
   }
 }
 
@@ -82,7 +82,13 @@ class MapIconsContainer extends Component {
     let activeLocs = getActiveLoc(activeIconTypes);
     //Bangun graf
     arr_simpul = [];
+    let counter = 0;
     activeLocs.forEach(element => {
+      if(element.name===undefined)
+      {
+        element.name = "Korok"+counter;
+        counter++;
+      }
       let simpul = new Simpul(element.name,element.coordinates);
       arr_simpul = arr_simpul.concat(simpul);
     });
@@ -189,9 +195,9 @@ function handleFirstClick(location,popupText,props,activeLocs){
     console.log("Array simpul: ",arr_simpul);
 
     //test simpul
-    arr_simpul.forEach(element => {
-      console.log("Tetangga simpul ",element.nama ," :",element.tetangga);
-    });
+    // arr_simpul.forEach(element => {
+    //   console.log("Tetangga simpul ",element.nama ," :",element.tetangga);
+    // });
 
     //update state targetLoc
     //newLatLngs for line in map

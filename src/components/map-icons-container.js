@@ -50,12 +50,20 @@ const DisplayIcons = ({ activeIconTypes, locations, props, activeLocs}) => {
   )
 };
 
+//source,dest lokasi dengan latitude longitude
+function euclideanDistance(source,dest) {
+  var a = dest[0] - source[0];
+  var b = dest[1] - source[1];
+
+  return Math.sqrt(a*a + b*b);
+}
 
 //Kelas simpul
 class Simpul {
   constructor(name, location) {
     this.nama = name;
     this.lokasi = location;
+    //array
     this.tetangga = undefined;
   }
   setTetangga(neighbour){
@@ -76,6 +84,32 @@ class MapIconsContainer extends Component {
     activeLocs.forEach(element => {
       let simpul = new Simpul(element.name,element.coordinates);
       arr_simpul = arr_simpul.concat(simpul);
+    });
+    //Hitung euclidean tiap simpul
+    arr_simpul.forEach(element => {
+      let other_simpul = {};
+      arr_simpul.forEach(element2 => {
+        if(element.nama !== element2.nama)
+        {
+          let eucRes = euclideanDistance(element.lokasi,element2.lokasi);
+          //debug
+          //console.log("Simpul 1:",element.nama," Simpul 2:",element2.nama," Jarak:",eucRes);
+          //other_simpul = other_simpul.concat([element2.nama,eucRes]);
+          other_simpul[element2.nama] = eucRes;
+        }
+      });
+      let simpul_sorted = Object.keys(other_simpul).sort(function(a,b){return other_simpul[a]-other_simpul[b]})
+      //debug
+      //console.log("Simpul 1:",element.nama," Simpul lain:",simpul_sorted);
+      //console.log("Simpul 1:",element.nama," Simpul lain 1:",simpul_sorted[0]);
+      //console.log("Simpul 1:",element.nama," Simpul lain 2:",simpul_sorted[1]);
+      //console.log("Simpul 1:",element.nama," Simpul lain 3:",simpul_sorted[2]);
+      let simpul_tetangga = [];
+      for(let i = 0; i<3; i++)
+      {
+        simpul_tetangga = simpul_tetangga.concat(simpul_sorted[i]);
+      }
+      element.setTetangga(simpul_tetangga);
     });
 
     return (
@@ -134,7 +168,9 @@ function handleFirstClick(location,popupText,props,activeLocs){
     
     console.log("Lokasi aktif: ",activeLocs);
     console.log("Lokasi mulai: ",start_loc);
-    console.log("Lokasi selesai", end_loc);
+    console.log("Lokasi selesai:", end_loc);
+    //testing euclidean
+    //console.log("Euclidean dist:",euclideanDistance(start_loc.coordinates,end_loc.coordinates));
     console.log(arr_simpul);
 
     //test simpul
@@ -151,6 +187,8 @@ function handleFirstClick(location,popupText,props,activeLocs){
   first_click = !first_click;
   //console.log("First click value",first_click);
 }
+
+
 
 
 function handleClick(event,activeIconTypes,location,popupText,props,activeLocs){

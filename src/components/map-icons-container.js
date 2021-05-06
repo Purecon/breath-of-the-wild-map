@@ -107,8 +107,10 @@ class MapIconsContainer extends Component {
       });
       let simpul_sorted = Object.keys(other_simpul).sort(function(a,b){return other_simpul[a]-other_simpul[b]})
       let simpul_tetangga = [];
+      let jumlah_tetangga;
       //Get tetangga n jarak terdekat
-      for(let i = 0; i<3; i++)
+      jumlah_tetangga = 5;
+      for(let i = 0; i<jumlah_tetangga; i++)
       {
         if (!element.tetangga.includes(simpul_sorted[i]))
         {

@@ -31,7 +31,7 @@ export default class MapContainer extends Component {
         //onClick={(event) => console.log("Klik di peta: ",[event.latlng.lat, event.latlng.lng])}
        >
         <TileLayer
-          minZoom={3}
+          minZoom={2}
           maxZoom={6}
           url='/images/tiles/{z}/{x}/{y}.png'
         />

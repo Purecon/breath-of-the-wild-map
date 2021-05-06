@@ -107,8 +107,8 @@ class MapIconsContainer extends Component {
       });
       let simpul_sorted = Object.keys(other_simpul).sort(function(a,b){return other_simpul[a]-other_simpul[b]})
       let simpul_tetangga = [];
-      //Get tetangga 2 jarak terdekat
-      for(let i = 0; i<2; i++)
+      //Get tetangga n jarak terdekat
+      for(let i = 0; i<3; i++)
       {
         if (!element.tetangga.includes(simpul_sorted[i]))
         {
@@ -168,23 +168,145 @@ export const setTargetLoc = (newLatLngs) => {
   }
 };
 
+//Kelas simpul jarak
+class SimpulJarak {
+  constructor(parent, name, coordinates, tetangga) {
+    this.parent = parent;
+    this.name = name;
+    this.coordinates = coordinates;
+    this.tetangga = tetangga;
+    //value
+    this.g = 0;
+    this.h = 0;
+    this.f = 0;
+  }
+  eq(other){
+    return this.name === other.name;
+  }
+  lessThan(other){
+    return this.f < other.f;
+  }
+}
+
+//fungsi A*
+function astar(start,end){
+  //Array simpul temp
+  var arr_simpul_temp = arr_simpul;
+  //Get simpul awal
+  var simpul_start;
+  var simpul_end;
+  arr_simpul_temp.forEach(simpul => {
+    if(simpul.nama === start.name){
+      simpul_start = simpul;
+    }
+    if(simpul.nama === end.name){
+      simpul_end = simpul;
+    }
+  });
+  //Create simpul jarak awal dan akhir, default value 0
+  let start_node = new SimpulJarak("None",simpul_start.nama,simpul_start.lokasi,simpul_start.tetangga);
+  let end_node = new SimpulJarak("None",simpul_end.nama,simpul_end.lokasi,simpul_end.tetangga);
+
+  //Insialisasi open dan closed list. Open:live node, closed:expanded node
+  let open_list = [];
+  let closed_list = [];
+
+  //Tambahkan start node
+  open_list.push(start_node);
+
+  //Loop sampai mendapat end
+  while(open_list.length > 0){
+    //Debug open list
+    console.log("Open list :",JSON.parse(JSON.stringify(open_list)))
+    //Debug closed list
+    console.log("Open list :",JSON.parse(JSON.stringify(closed_list)))
+    //Ambil current node dengan f terkecil
+    var current_node = open_list[0];
+    var current_index = 0;
+    open_list.forEach(item => {
+      if(item.lessThan(current_node)){
+        current_node = item;
+      }
+    });
+    //Debug current node
+    console.log("Current node :",current_node);
+    //Pop dan masukkan ke closed list
+    var deleted = open_list.splice(current_index,1);
+    closed_list.push(deleted[0]);
+    //Menemukan goal catat path
+    if(current_node.eq(end_node)){
+      let path = [];
+      let current = current_node;
+      while(current !== "None"){
+        //Debug
+        path.push(current)
+        current = current.parent;
+      }
+      return path.reverse();
+    }
+    //Generate children
+    var list_children = current_node.tetangga;
+    var children = [];
+    var selected_simpul;
+    list_children.forEach(child_element => {
+      arr_simpul_temp.forEach(simpul => {
+        if(simpul.nama === child_element){
+          selected_simpul = simpul;
+        }
+      });
+      //Buat simpul baru
+      var new_node = new SimpulJarak(current_node,selected_simpul.nama,selected_simpul.lokasi,selected_simpul.tetangga);
+      //Push ke array
+      children.push(new_node);
+    });
+
+    //Loop untuk setiap children
+    children.forEach(child => {
+      var skip = false;
+      //Cek child apakah ada di closed list (sudah expanded)
+      closed_list.forEach(closed_child => {
+        if (child.eq(closed_child)){
+          skip=true;
+        }
+      });
+      if(!skip){
+        //Kalkulasi nilai f dari nilai g dan h
+        child.g = euclideanDistance(child.coordinates,start_node.coordinates);
+        child.h = euclideanDistance(child.coordinates,end_node.coordinates);
+        child.f = child.g + child.h;
+
+        //Cek child apakah ada di open list (di live node) dan g lebih besar
+        open_list.forEach(open_child => {
+          if (child.eq(open_child) && child.g >= open_child.g){
+            skip=true;
+          }
+        });
+        if(!skip){
+          //Tambahkan child ke open list(live node)
+          open_list.push(child);
+          open_list.sort((a,b) => (a.f > b.f) ? 1 : ((b.f > a.f) ? -1 : 0))
+        }
+      }
+    });
+  }
+}
+
 //first_click button
 let first_click = true;
-let newLatLngs = [];
 let start_loc, end_loc;
 function handleFirstClick(location,popupText,props,activeLocs){
   if(first_click){
     popupText = "Titik mulai: \n" + popupText;
     console.log(popupText);
     //test newLatLngs
-    newLatLngs = [location.coordinates];
+    //newLatLngs = [location.coordinates];
     start_loc = location;
   }
   else{
     popupText = "Titik selesai: \n" + popupText;
     console.log(popupText);
     //test newLatLngs
-    newLatLngs = newLatLngs.concat([location.coordinates]);
+    //newLatLngs = newLatLngs.concat([location.coordinates]);
     end_loc = location;
     
     console.log("Lokasi aktif: ",activeLocs);
@@ -199,6 +321,16 @@ function handleFirstClick(location,popupText,props,activeLocs){
     //   console.log("Tetangga simpul ",element.nama ," :",element.tetangga);
     // });
 
+    //Call function A*
+    let newLatLngs = [];
+    let result_Astar = astar(start_loc,end_loc);
+    if(result_Astar !== undefined){
+      console.log("Astar result: ",result_Astar);
+      result_Astar.forEach(element => {
+        newLatLngs = newLatLngs.concat([element.coordinates]);
+      });
+    }
+    //console.log("NewLatLngs",newLatLngs);
     //update state targetLoc
     //newLatLngs for line in map
     props.dispatch(setTargetLoc(newLatLngs));
@@ -208,9 +340,6 @@ function handleFirstClick(location,popupText,props,activeLocs){
   first_click = !first_click;
   //console.log("First click value",first_click);
 }
-
-
-
 
 function handleClick(event,activeIconTypes,location,popupText,props,activeLocs){
   //Log after clicked

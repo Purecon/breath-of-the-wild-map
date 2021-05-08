@@ -105,11 +105,13 @@ class MapIconsContainer extends Component {
           other_simpul[element2.nama] = eucRes;
         }
       });
+      //Debug log
+      console.log("Simpul :",element.nama,"Jarak :",other_simpul);
       let simpul_sorted = Object.keys(other_simpul).sort(function(a,b){return other_simpul[a]-other_simpul[b]})
       let simpul_tetangga = [];
       let jumlah_tetangga;
       //Get tetangga n jarak terdekat
-      jumlah_tetangga = 3;
+      jumlah_tetangga = 4;
       if(activeIconTypes.length === 1){
         activeIconTypes.forEach(element => {
           if(element==="stable"){
@@ -125,6 +127,8 @@ class MapIconsContainer extends Component {
         }
       }
       element.setTetangga(simpul_tetangga);
+      //Debug log
+      //console.log("Simpul :",element.nama,"Tetangga :",simpul_tetangga);
     });
 
     //Tambahkan tetangga jika belum dua arah
@@ -199,7 +203,7 @@ class SimpulJarak {
 
 //fungsi A*
 function astar(start,end){
-  //Array simpul temp
+  //Array simpul temp terdiri dari array semua simpul 
   var arr_simpul_temp = arr_simpul;
   //Get simpul awal
   var simpul_start;

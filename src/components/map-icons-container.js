@@ -109,7 +109,14 @@ class MapIconsContainer extends Component {
       let simpul_tetangga = [];
       let jumlah_tetangga;
       //Get tetangga n jarak terdekat
-      jumlah_tetangga = 5;
+      jumlah_tetangga = 3;
+      if(activeIconTypes.length === 1){
+        activeIconTypes.forEach(element => {
+          if(element==="stable"){
+            jumlah_tetangga = 5;
+          }
+        });
+      }
       for(let i = 0; i<jumlah_tetangga; i++)
       {
         if (!element.tetangga.includes(simpul_sorted[i]))
@@ -311,7 +318,7 @@ function handleFirstClick(location,popupText,props,activeLocs){
     //newLatLngs = newLatLngs.concat([location.coordinates]);
     end_loc = location;
     
-    console.log("Lokasi aktif: ",activeLocs);
+    //console.log("Lokasi aktif: ",activeLocs);
     console.log("Lokasi mulai: ",start_loc);
     console.log("Lokasi selesai: ", end_loc);
     //testing euclidean

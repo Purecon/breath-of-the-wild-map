@@ -145,7 +145,10 @@ class MapIconsContainer extends Component {
     });
 
     //Debug log
-    //console.log("Simpul :",element.nama,"Tetangga :",simpul_tetangga);
+    // arr_simpul.forEach(element => {
+    //   console.log("Simpul :",element.nama,"Tetangga :",element.tetangga);
+    // });
+    
 
     return (
       <div>
@@ -233,7 +236,7 @@ function astar(start,end){
     //Debug open list
     console.log("Open list :",JSON.parse(JSON.stringify(open_list)))
     //Debug closed list
-    console.log("Open list :",JSON.parse(JSON.stringify(closed_list)))
+    console.log("Closed list :",JSON.parse(JSON.stringify(closed_list)))
     //Ambil current node dengan f terkecil
     var current_node = open_list[0];
     var current_index = 0;

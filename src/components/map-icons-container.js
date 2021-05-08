@@ -106,7 +106,7 @@ class MapIconsContainer extends Component {
         }
       });
       //Debug log
-      console.log("Simpul :",element.nama,"Jarak :",other_simpul);
+      //console.log("Simpul :",element.nama,"Jarak :",other_simpul);
       let simpul_sorted = Object.keys(other_simpul).sort(function(a,b){return other_simpul[a]-other_simpul[b]})
       let simpul_tetangga = [];
       let jumlah_tetangga;
@@ -127,8 +127,6 @@ class MapIconsContainer extends Component {
         }
       }
       element.setTetangga(simpul_tetangga);
-      //Debug log
-      //console.log("Simpul :",element.nama,"Tetangga :",simpul_tetangga);
     });
 
     //Tambahkan tetangga jika belum dua arah
@@ -145,6 +143,9 @@ class MapIconsContainer extends Component {
         });
       });
     });
+
+    //Debug log
+    //console.log("Simpul :",element.nama,"Tetangga :",simpul_tetangga);
 
     return (
       <div>

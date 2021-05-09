@@ -1,3 +1,12 @@
+## Credits
+Forked from WilmanDuffy botw-map github
+, thank you for the map source code.
+
+## Modification
+Implement A* algorithm for path finding in IF 2211 project.
+
+modified by: M.Furqon(13519184)
+
 This project was bootstrapped with [Create React App](https://github.com/facebookincubator/create-react-app).
 
 Below you will find some information on how to perform common tasks.<br>
